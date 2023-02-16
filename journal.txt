@@ -1,7 +1,7 @@
 
 
 #lancement du container mysql 
-docker run --name=MySQL_pers --env="MYSQL_ROOT_PASSWORD=Tristan" -v C:\dev\MysSQL2\persistance:/var/lib/mysql/ -p 3307:3306 -d mysql:latest
+docker run --name=MySQL_pers --env="MYSQL_ROOT_PASSWORD=Tristan" -v C:\dev\mysSQL_Data\pizzaDB:/var/lib/mysql/ -p 3307:3306 -d mysql:latest
 
 #create DB : rentrer dans le container : docker exec -it <NOM_CONTAINER> <COMMAND_A_EXECUTER>
 
