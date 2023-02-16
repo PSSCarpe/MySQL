@@ -1,0 +1,72 @@
+
+
+#lancement du container mysql 
+docker run --name=MySQL_pers --env="MYSQL_ROOT_PASSWORD=Tristan" -v C:\dev\MysSQL2\persistance:/var/lib/mysql/ -p 3307:3306 -d mysql:latest
+
+#create DB : rentrer dans le container : docker exec -it <NOM_CONTAINER> <COMMAND_A_EXECUTER>
+
+# la commande est ici : "mysql -uroot -ptoto"
+
+// docker exec -it MySQL_pers mysql -uroot -pTristan \\
+
+#crée la DB : create Pizza
+#utiliser la DB : USE Pizza;
+#crée la table : CREATE TABLE Client (idClient INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                 prenom VARCHAR(25), nom VARCHAR(25), points INT DEFAULT 0);
+#insérer des valeurs dans DB : INSERT INTO Client VALUES (1,'Thomas','COAN',0);
+                               INSERT INTO Client VALUES (2,'Tristan','KOENIG',0);
+
+#Vérifier que tt est bon dans la table : SELECT * FROM Client;
+
+#Crée un utilisateur : CREATE USER 'Tristan'@'%' IDENTIFIED BY 'Tristan68';
+#Donnée les privilèges à l'utilisateur : GRANT ALL PRIVILEGES ON Pizza.* to 'Tristan'@'%';
+#Rentrer dans la base avec user : docker exec -it MySQL_pers mysql -uTristan -pTristan68
+
+#Nouvelle table : CREATE TABLE Ls_Pizza (nom VARCHAR(25) PRIMARY KEY, prix FLOAT,description VARCHAR(150), ajt_points FLOAT);
+#Insérer Pizza : INSERT INTO Ls_Pizza VALUES ('Margarita', 8.5,'La pizza la plus classique qui soit, mais toujours aussi bonne',1);
+#Insérer Pizza : INSERT INTO Ls_Pizza VALUES ('Chorizo', 9,'Une Pizza traditionnelle agrémenter de chrorizo', 1);
+#Insérer Pizza : INSERT INTO Ls_Pizza VALUES ('Mexicaine', 10.5,'Une pizza venue droit du Mexique, un peu épicé', 1);
+#Insérer Pizza : INSERT INTO Ls_Pizza VALUES ('4 frommages', 9.5,'Une pizza à base de 4 frommages', 1);
+#Insérer Pizza : INSERT INTO Ls_Pizza VALUES ('Kebab', 12,'Une pizza basé sur la recette intemporelle du Kebab', 2);
+#Insérer Pizza : INSERT INTO Ls_Pizza VALUES ('Végétarienne', 9,'Une pizza pour les amateurs de végétaux et les écolos', 1);
+#Insérer Pizza : INSERT INTO Ls_Pizza VALUES ('Spécial maison', 15,'Une pizza unique, spécialité de la maison', 2);
+
+
+
+
+cf command liens programme : https://medium.com/swlh/how-to-connect-to-mysql-docker-from-python-application-on-macos-mojave-32c7834e5afa
+
+################################################################################################################
+exo 1:                                                          OK
+lancer 2° container + configurer base, table, user + insert     OK
+RElancer le prog en pointant sur cont1 puis cont_mysql2         OK
+tester persistance : supprimer cont_mysql2                      OK
+relancer avec les volumes , et voir si tout est dispo           OK
+################################################################################################################
+exo2 : 
+lancer un job jenkins qui lance ton prog python
+besoin d'un container jenkins avec volume monte pointant sur ton code MySql
+le job de type pipeline reference ton script dans le path du container
+
+snippet de code pour le job pipeline :
+
+def currentPath = pwd() 
+node() {
+    stage('Hello'){
+        println 'Demarrage'
+    }
+    stage('monExec') {
+        //recup du code pour l'avoir dasn le workspace
+        sh "cp -rf /PATH_SCRIPT_CONTAINER ${currentPath}"
+        sh 'ls -l' // verif qu'on voit le folder copie*
+        sh 'python --version' //s'assurer que python existe
+        sh "python PATH_SUR_poc....."
+
+        //si pas python 
+        /*
+        dockerJenkins.execute (monImagePython) {
+            sh 'ls -l'   // on voit les fichiers mySql
+        }
+        */
+    }
+}
